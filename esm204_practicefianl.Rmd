@@ -5,9 +5,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
 ```
 
 Note: The actual final will be somewhat shorter than this practice exam.
+
 
 1. Community A is composed of residents that have historically been disadvantaged. Community B is composed of wealthy residents.
 Polluters in A have pollution demand: P = 20 − Q_A, where Q_A is pollution in A.
@@ -16,6 +19,28 @@ Polluters in B have pollution demand: P = 20 − 2*Q_B.
 (a) Without any regulation, how much pollution do you expect in each community?
 Is there an Environmental Justice problem (i.e. is there more pollution in the
 disadvantaged community)?
+
+```{r}
+# Community A
+
+ggplot() +
+  geom_abline(aes(intercept = 20,
+                  slope = -1),
+              color = "blue") +
+  geom_abline(aes(intercept = 20,
+                  slope = -2),
+              color = "red") +
+  labs(x = "Q",
+       y = "P",
+       caption = "Blue: Community A (DAC)\nRed: Community B (non-DAC)") +
+  scale_x_continuous(limits = c(0, 25),
+                     expand = c(0,0)) +
+  scale_y_continuous(limits = c(0, 25),
+                     expand = c(0,0))
+
+
+```
+
 
 (b) Suppose a standard is set where pollution cannot exceed Q¯ = 6 in any community. What is the cost to firms in A of achieving this standard? What is the
 cost to firms in B? What is the total cost?
@@ -35,6 +60,10 @@ iii. Cap and trade (with cap of 6 in A and cap of 6 in B, and subsequent
 trading)
 
 
+
+
+
+
 2. The demand for river rafting trips down the Colorado River is given by: P = 500 − Q/2 (where P is \$/trip and Q is number of trips each summer). The cost of providing each trip (paying the guide, raft, food, etc.) is \$100.
 
 (a) If there is a free market for rafting trips, how many trips would you expect? What would be the price of a trip?
@@ -45,6 +74,10 @@ trading)
 (c) Taking all private and external costs into account, what is the socially optimal number of rafting trips on the Colorado River?
 
 (d) List 3 interventions that could achieve the socially optimal number of trips (with a 1-2 sentence explanation of how each intervention works).
+
+
+
+
 
 
 3. Felicity’s utility function is given by U(X) = X ^ 1.3, where X is a monetary payoff.
@@ -66,12 +99,20 @@ choose Option A or Option B?
 (c) In a sudden boost of confidence, Felicity now thinks p = 0.2. Which option does
 she choose?
 
+
+
+
+
 4. Dam removal is extremely costly, but can deliver long-term ecological benefits. The cost of removing the Big River dam is \$100 million, which has to be paid immediately. Starting one year from now, there are other remediation costs of \$5 million per year for 5 years. The benefit of dam removal is \$10 million per year, starting in year 20. This benefit occurs every year and goes on forever.
 (Hint: Remember that for any reasonable positive value of r, you only need to go out 100 years or so before the present value becomes very small. so if you do this numerically, you only need to run it out for about 100 years to decide which policy is better. )
 
 (a) If the discount rate is r = 0, what is the present value of costs? What is the present value of benefits? Do the benefits of dam removal outweigh the costs?
 
 (b) If the discount rate is r = .05, do the benefits outweigh the costs? If the discount rate is r = .01, do the benefits outweigh the cost?
+
+
+
+
 
 5. A researcher named Sara is interested in the value of urban trees as an ecosystem service. She has gathered a dataset on home values in cities across the US. For each home, Sara knows:
 
