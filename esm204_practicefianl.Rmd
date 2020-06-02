@@ -21,12 +21,12 @@ Is there an Environmental Justice problem (i.e. is there more pollution in the
 disadvantaged community)?
 
 ```{r}
-# Community A
-
 ggplot() +
+  # Community A
   geom_abline(aes(intercept = 20,
                   slope = -1),
               color = "blue") +
+  # Community B
   geom_abline(aes(intercept = 20,
                   slope = -2),
               color = "red") +
@@ -38,28 +38,144 @@ ggplot() +
   scale_y_continuous(limits = c(0, 25),
                      expand = c(0,0))
 
+# Level of pollution
+## Community A
+
+# P = 20 - Q_A
+# Q_A = 20 - P
+
+P <- 0
+Q_A <- 20 - P
+
+# 20
+
+## Community B
+# P = 20 - 2 * Q_B
+# Q_B = (20 - P) / 2
+
+Q_B <- (20 - P) / 2
+# 10
+
+# EJ Gap
+
+EJ <- Q_A - Q_B
 
 ```
 
+EJ Gap = Q_A - Q_B = `r Q_A` - `r Q_B` = `r EJ`
 
-(b) Suppose a standard is set where pollution cannot exceed Q¯ = 6 in any community. What is the cost to firms in A of achieving this standard? What is the
-cost to firms in B? What is the total cost?
+
+(b) Suppose a standard is set where pollution cannot exceed Q¯ = 6 in any community. What is the cost to firms in A of achieving this standard? What is the cost to firms in B? What is the total cost?
+
+```{r}
+new_level <- 6
+
+# Cost to A
+# Reduction from 20 to 6
+
+Q_A_b <- 6
+
+P_A_b <- 20 - Q_A_b
+
+cost_A <- ((Q_A - new_level) * P_A_b) / 2
+
+
+# Cost to B
+# Reduction from 10 to 6
+
+Q_B_b <- 6
+
+P_B_b <- 20 - 2 * Q_A_b
+
+cost_B <- ((Q_B - new_level) * P_B_b) / 2
+
+# Total Cost
+
+tot_cost <- cost_A + cost_B
+```
+
+Cost to A: `r cost_A`
+
+Cost to B: `r cost_B`
+
+Total Cost: `r tot_cost`
+
 
 (c) Suppose firms in A are allowed to pollute 6 and firms in B are allowed to
 pollute 6, and that they are allowed to trade pollution rights. What would be
 the trading price of pollution permits? Which firm would buy and which firm
 would sell, and how much?
 
+```{r}
+Q <- 6 + 6
+
+agg_p <- 20 - (2 * Q / 3)
+
+Q_A_lim <- 20 - agg_p
+
+Q_B_lim <- (20 - agg_p) / 2
+
+
+ggplot() +
+  # Community A
+  geom_abline(aes(intercept = 20,
+                  slope = -1),
+              color = "blue") +
+  # Community B
+  geom_abline(aes(intercept = 20,
+                  slope = -2),
+              color = "red") +
+  # Aggregate
+  geom_abline(aes(intercept = 20,
+                  slope = -2/3)) +
+  # Vertical
+  geom_vline(aes(xintercept = Q),
+             linetype = "dashed") +
+  geom_vline(aes(xintercept = Q/2),
+             linetype = "dashed") +
+  # Horizontal
+  geom_hline(aes(yintercept = agg_p),
+             linetype = "dashed") +
+  # Points
+  geom_point(aes(x = Q,
+                 y = agg_p)) +
+  geom_point(aes(x = Q_A_lim,
+                 y = agg_p),
+             color = "blue") +
+  geom_point(aes(x = Q_B_lim,
+                 y = agg_p),
+             color = "red") +
+  labs(x = "Q",
+       y = "P",
+       caption = "Blue: Community A (DAC)\nRed: Community B (non-DAC)\nBlack: Aggregate") +
+  scale_x_continuous(limits = c(0, 35),
+                     expand = c(0,0)) +
+  scale_y_continuous(limits = c(0, 25),
+                     expand = c(0,0))
+
+```
+Trading price of permits: $`r agg_p`
+
+Community A would demand `r Q_A_lim` units
+
+Community B would demand `r Q_B_lim` units
+
+Therefore, Community B would `r ifelse(Q/2 - Q_B_lim < 0, "buy up to", ifelse(Q/2 - Q_B_lim > 0, "sell up to", "relinguish"))` `r Q/2 - Q_B_lim` units to Community A, which would be willing to `r ifelse(Q/2 - Q_A_lim < 0, "buy up to", ifelse(Q/2 - Q_A_lim > 0, "sell up to", "relinguish"))` `r abs(Q/2 - Q_A_lim)` units
+
 (d) What are the EJ implications of each of the following policies:
 
 i. No regulation
 
+EJ Gap = Q_A - Q_B = `r Q_A` - `r Q_B` = `r Q_A - Q_B`
+
 ii. Standard of 6 everywhere, and
+
+No EJ gap
 
 iii. Cap and trade (with cap of 6 in A and cap of 6 in B, and subsequent
 trading)
 
-
+EJ Gap = Q_A - Q_B = `r Q_A_lim` - `r Q_B_lim` = `r Q_A_lim - Q_B_lim`
 
 
 
@@ -68,21 +184,107 @@ trading)
 
 (a) If there is a free market for rafting trips, how many trips would you expect? What would be the price of a trip?
 
+```{r}
+C <- 100
+
+P <- C
+
+Q <- (500 - P) * 2
+```
+
+`r Q` trips at $`r P`/trip
+
 
 (b) Suppose that each trip also imposes some external costs, through congestion, litter, wildlife disturbance, etc. The Qth trip imposes an external cost of 3Q/2. Draw the demand, marginal private cost, and marginal external cost curves.
 
+```{r}
+
+
+
+ggplot() +
+  # Demand
+  geom_abline(aes(intercept = 500,
+                  slope = -0.5),
+              color = "black") +
+  # MEC
+  geom_abline(aes(intercept = 0,
+                  slope = 1.5),
+              color = "red") +
+  # MSC
+  geom_abline(aes(intercept = C,
+                  slope = 1.5),
+              color = "purple") +
+  # Horizontal
+  geom_hline(aes(yintercept = C),
+             color = "blue") +
+  labs(x = "Q",
+       y = "P",
+       caption = "") +
+  # Points
+  ## Demand & Cost
+  geom_point(aes(x = Q,
+                 y = P),
+             color = "blue") +
+  ## Optimal (Demand & MSC)
+  geom_point(aes(x = 200,
+                 y = 500 - 200/2),
+             color = "purple") +
+  ## Demand & MEC
+  geom_point(aes(x = 250,
+                 y = 500 - 250/2),
+             color = "red") +
+  scale_x_continuous(limits = c(0, 1050),
+                     expand = c(0,0),
+                     breaks = seq(0, 1000, by = 100)) +
+  scale_y_continuous(limits = c(0, 550),
+                     expand = c(0,0))
+
+
+```
+
+
 (c) Taking all private and external costs into account, what is the socially optimal number of rafting trips on the Colorado River?
+
+`r (500 - C) / 2` trips
 
 (d) List 3 interventions that could achieve the socially optimal number of trips (with a 1-2 sentence explanation of how each intervention works).
 
+- Limiting access to the river to `r (500 - C) / 2` groups per summer by means of gates.
 
+- Raising the cost of a rafting permit to $`r 500 - ((500 - C) / 2) / 2` per trip
+
+- [Another brilliant intervention here]
 
 
 
 
 3. Felicity’s utility function is given by U(X) = X ^ 1.3, where X is a monetary payoff.
 
+```{r}
+utility <- function(x){
+  u = x ^ 1.3
+  return(u)
+}
+```
+
+
 (a) Is Felicity Risk Averse or Risk Loving?
+
+```{r}
+
+felicity <- data.frame(x = seq(0, 1000, by = 0.1)) %>%
+  mutate(u = utility(x))
+
+ggplot() +
+  geom_line(data = felicity,
+            aes(x = x,
+                y = u)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+  
+```
+
+Felicity is risk loving.
 
 (b) Felicity is throwing darts at the county fair and has already popped the requisite
 3 balloons to win a prize. She faces the following options:
@@ -93,22 +295,146 @@ trading)
 - $100 If she pops a balloon and
 – $0 if she does not pop a balloon.
 
+```{r}
+payoff_A <- 10
+
+utility_A <- utility(payoff_A)
+
+
+p_B_pop <-  0.1
+payoff_B_pop <-  100
+
+p_B_no_pop <- 1 - p_B_pop
+payoff_B_no_pop <-  0
+
+utility_B <- utility(p_B_pop * payoff_B_pop + p_B_no_pop * payoff_B_no_pop)
+```
+
+
 If Felicity believes the probability she will pop a balloon is p = 0.1, will she
 choose Option A or Option B?
 
-(c) In a sudden boost of confidence, Felicity now thinks p = 0.2. Which option does
-she choose?
+Utility of Option A: `r round(utility_A, 2)`
 
+Utility of Option B: `r round(utility_B, 2)`
 
+Felicity `r ifelse(utility_B > utility_A, "will choose Option B", ifelse(utility_A > utility_B, "will choose Option A", "is indifferent"))`.
+Since she is risk loving, she will choose the gamble of Option B.
 
+(c) In a sudden boost of confidence, Felicity now thinks p = 0.2. Which option does she choose?
+
+```{r}
+p_B_pop_2 <-  0.2
+payoff_B_pop_2 <-  100
+
+p_B_no_pop_2 <- 1 - p_B_pop
+payoff_B_no_pop_2 <-  0
+
+utility_B_2 <- utility(p_B_pop_2 * payoff_B_pop_2 + p_B_no_pop_2 * payoff_B_no_pop_2)
+```
+
+Utility of Option A: `r round(utility_A, 2)`
+
+Utility of Option B: `r round(utility_B_2, 2)`
+
+Felicity `r ifelse(utility_B_2 > utility_A, "will choose Option B", ifelse(utility_A > utility_B_2, "will choose Option A", "is indifferent"))`.
 
 
 4. Dam removal is extremely costly, but can deliver long-term ecological benefits. The cost of removing the Big River dam is \$100 million, which has to be paid immediately. Starting one year from now, there are other remediation costs of \$5 million per year for 5 years. The benefit of dam removal is \$10 million per year, starting in year 20. This benefit occurs every year and goes on forever.
 (Hint: Remember that for any reasonable positive value of r, you only need to go out 100 years or so before the present value becomes very small. so if you do this numerically, you only need to run it out for about 100 years to decide which policy is better. )
 
+```{r}
+cost_imm <- 100
+
+cost_int <- 5
+
+int_yr <- 5
+
+ben <- 10
+
+ben_start <- 20
+
+len <- 100
+```
+
+
 (a) If the discount rate is r = 0, what is the present value of costs? What is the present value of benefits? Do the benefits of dam removal outweigh the costs?
 
+```{r}
+r <- 0
+
+q4_a <- data.frame(year = seq(0, len, by = 1),
+                   cost = c(cost_imm,
+                            rep(cost_int, int_yr),
+                            rep(0, len - int_yr)),
+                   benefit = c(rep(0, ben_start),
+                               rep(ben, len - ben_start + 1))) %>%
+  mutate(PV_C = cost / ((1 + r) ^ year),
+         PV_B = benefit / ((1 + r) ^ year))
+
+PV_C_0 <- sum(q4_a$PV_C)
+PV_B_0 <- sum(q4_a$PV_B)
+```
+
+Present Value at r = `r r` after `r len` years
+
+Costs: $`r round(PV_C_0)` million
+
+Benefits: $`r round(PV_B_0)` million
+
+`r ifelse(PV_C_0 > PV_B_0, "The costs outweigh the benefits.", ifelse(PV_B_0 > PV_C_0, "The benefits outweigh the costs.", "The costs and benefits are equal."))`
+
+
+
 (b) If the discount rate is r = .05, do the benefits outweigh the costs? If the discount rate is r = .01, do the benefits outweigh the cost?
+
+```{r}
+r <- 0.05
+
+q4_b1 <- data.frame(year = seq(0, len, by = 1),
+                   cost = c(cost_imm,
+                            rep(cost_int, int_yr),
+                            rep(0, len - int_yr)),
+                   benefit = c(rep(0, ben_start),
+                               rep(ben, len - ben_start + 1))) %>%
+  mutate(PV_C = cost / ((1 + r) ^ year),
+         PV_B = benefit / ((1 + r) ^ year))
+
+PV_C_05 <- sum(q4_b1$PV_C)
+PV_B_05 <- sum(q4_b1$PV_B)
+```
+
+Present Value at r = `r r` after `r len` years
+
+Costs: $`r round(PV_C_05, 2)` million
+
+Benefits: $`r round(PV_B_05)` million
+
+`r ifelse(PV_C_05 > PV_B_05, "The costs outweigh the benefits.", ifelse(PV_B_05 > PV_C_05, "The benefits outweigh the costs.", "The costs and benefits are equal."))`
+
+```{r}
+r <- 0.01
+
+q4_b2 <- data.frame(year = seq(0, len, by = 1),
+                   cost = c(cost_imm,
+                            rep(cost_int, int_yr),
+                            rep(0, len - int_yr)),
+                   benefit = c(rep(0, ben_start),
+                               rep(ben, len - ben_start + 1))) %>%
+  mutate(PV_C = cost / ((1 + r) ^ year),
+         PV_B = benefit / ((1 + r) ^ year))
+
+PV_C_01 <- sum(q4_b2$PV_C)
+PV_B_01 <- sum(q4_b2$PV_B)
+```
+
+Present Value at r = `r r` after `r len` years
+
+Costs: $`r round(PV_C_01)` million
+
+Benefits: $`r round(PV_B_01)` million
+
+`r ifelse(PV_C_01 > PV_B_01, "The costs outweigh the benefits.", ifelse(PV_B_01 > PV_C_01, "The benefits outweigh the costs.", "The costs and benefits are equal."))`
 
 
 
@@ -127,13 +453,27 @@ where i indicates the home. From this regression, Sara obtains the following est
 
 βˆ1 = 400.
 
+```{r}
+value <- function(beta_0, beta_1, T_i, controls, error_i){
+  value = beta_0 + beta_1 * T_i + controls + error_i
+  return(value)
+}
+
+beta_0 <-  300000
+beta_1 <- 400
+```
+
+
 (a) Does more tree cover increase a home’s value? By how much?
+
+Yes, by $`r beta_1` per tree.
 
 (b) Los Angeles currently has tree cover of T = 3 and they are considering a campaign to increase tree cover to T = 5. By how much would this additional tree cover raise the value of each house in Los Angeles?
 
+Home values would rise by $`r 400 * (5 - 3)` per house
+
+
 (c) Suppose there are 1,000,000 houses in Los Angeles. If the cost of the tree campaign in Los Angeles is $10,000,000 do the benefits outweigh the costs?
 
-
-
-
+Benefits = $`r as.character(1 * 400 * (5 - 3))` million
 
