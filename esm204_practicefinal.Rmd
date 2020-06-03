@@ -17,8 +17,7 @@ Polluters in A have pollution demand: P = 20 − Q_A, where Q_A is pollution in 
 Polluters in B have pollution demand: P = 20 − 2*Q_B.
 
 (a) Without any regulation, how much pollution do you expect in each community?
-Is there an Environmental Justice problem (i.e. is there more pollution in the
-disadvantaged community)?
+Is there an Environmental Justice problem (i.e. is there more pollution in the disadvantaged community)?
 
 ```{r}
 ggplot() +
@@ -286,8 +285,7 @@ ggplot() +
 
 Felicity is risk loving.
 
-(b) Felicity is throwing darts at the county fair and has already popped the requisite
-3 balloons to win a prize. She faces the following options:
+(b) Felicity is throwing darts at the county fair and has already popped the requisite 3 balloons to win a prize. She faces the following options:
 
 • Option A: Stop playing now, and receive a payoff of $10, or
 
