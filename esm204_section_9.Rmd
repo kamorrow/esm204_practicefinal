@@ -1,0 +1,93 @@
+---
+title: "Section Week 9: Non Market Valuation"
+author: "Keene Morrow"
+date: "6/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+Material by Sam Collie
+
+### Hedonic Price Method
+
+Ivory Tower Winery is interested in buying land in the South Coast region to grow pinot noir wine grapes. The owners of Ivory Tower are concerned that climate change may affect the value of their investment. Your consulting firm, Basic Business, has been hired to assess how climate change will affect the value of vineyard land in the South/Central coast.
+
+Ivory Tower's summer intern collected data on previous sales of farmland in Santa Barbara County's wine country. Each data point includes the average price per acre of farmland in 2007, the average temperature in the thirty years preceding 2007, as well as other control variables (lot size, slope etc). Regresssion analysis was used to estimate the linear relationship:
+
+Price Per Acre_i = beta_0 + beta_1 * Temperature_i + Controls + error_i
+
+From this regression, the summer intern gets the following estimates:
+
+Beta^0 = 82000
+
+Beta^1 = -1250
+
+Questions:
+
+1. Does average temperature increase or decrease farmland value?
+
+2. What is the predicted effect of a one degree increase in temperature on farmland value (per acre)?
+
+3. Using this model, what is the anticipated effect of a 1 degree increase in mean temperature?
+
+4. Suppose temperatures will increase by 2.5 degrees over the next 30 years. Estimate how this temperature increase will affect farmland values.
+
+
+### Travel Cost Method
+
+The travel cost method backs out willingness to pay for environmental services by estimated the the price people pay to travel to them. This is best demonstrated with an example (Kolstad Chapter 9 Question 7).
+
+Zone Distance From Park Zonal Population Number of Visitors
+1 10 5,000 500
+2 20 10,000 900
+3 30 25,000 2,000
+4 40 10,000 700
+5 50 100,000 6,000
+
+Assume it costs $0.50 to travel one mile, and there is no entrance fee to the park. Sketch the willingness to pay curve for the park, where price is on the verticle axis and number of visits is on the horizontal axis.
+
+```{r}
+travel <- data.frame(zone = seq(1, 5, by = 1),
+                     distance = seq(10, 50, by = 10),
+                     pop = c(5000, 10000, 25000, 10000, 100000),
+                     visitors = c(500, 900, 2000, 700, 6000),
+                     total_vis = rep(0, 5)) %>%
+  mutate(cost = distance * 0.5,
+         pct_zone = (visitors / pop) * 100)
+
+travel$total_vis[1] = travel$visitors[1]
+travel$total_vis[2] = travel$visitors[2] + travel$total_vis[1]
+travel$total_vis[3] = travel$visitors[3] + travel$total_vis[2]
+travel$total_vis[4] = travel$visitors[4] + travel$total_vis[3]
+travel$total_vis[5] = travel$visitors[5] + travel$total_vis[4]
+
+ggplot(data = travel) +
+  geom_line(aes(x = total_vis,
+                 y = cost)) +
+  geom_point(aes(x = total_vis,
+                 y = cost))+
+  labs(x = "Total Visitors",
+       y = "Cost of Travel",
+       title = "Park Visits")
+
+ggplot(data = travel) +
+  geom_line(aes(x = pct_zone,
+                 y = cost)) +
+  geom_point(aes(x = pct_zone,
+                 y = cost)) +
+  labs(x = "Percent of Zone Population",
+       y = "Cost of Travel (One Direction)",
+       title = "Park Visits")
+```
+
+
+
+
+
+
+
